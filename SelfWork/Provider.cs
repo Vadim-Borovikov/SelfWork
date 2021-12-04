@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SelfWork.Data;
 
 namespace SelfWork
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public static class Provider
+    internal static class Provider
     {
         public static TokenResult GetToken(string userAgent, string sourceDeviceId, string sourceType,
             string appVersion, string refreshToken)
@@ -30,8 +28,8 @@ namespace SelfWork
             return RestHelper.CallPostMethod<TokenResult>(ApiProvider, GetTokenMethod, tokenRequestDto, Settings);
         }
 
-        public static IncomeResult PostIncome(string incomeType, DateTime operationTime, DateTime requestTime,
-            List<IncomeRequest.Service> services, decimal totalAmount, string paymentType, string token)
+        public static IncomeResult PostIncome(DateTime operationTime, DateTime requestTime,
+            List<IncomeRequest.Service> services, decimal totalAmount, string token, string incomeType)
         {
             var client = new IncomeRequest.Client { IncomeType = incomeType };
             var incomeRequestDto = new IncomeRequest
@@ -41,7 +39,7 @@ namespace SelfWork
                 Services = services,
                 TotalAmount = totalAmount,
                 ClientInfo = client,
-                PaymentType = paymentType
+                PaymentType = PaymentType
             };
 
             return RestHelper.CallPostMethod<IncomeResult>(ApiProvider, PostIncomeMethod, incomeRequestDto, Settings,
@@ -51,6 +49,7 @@ namespace SelfWork
         private const string ApiProvider = "https://lknpd.nalog.ru/api/v1/";
         private const string GetTokenMethod = "auth/token";
         private const string PostIncomeMethod = "income";
+        private const string PaymentType = "CASH";
 
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {

@@ -6,5 +6,8 @@ namespace SelfWork.Data
     {
         [JsonProperty]
         public string ApprovedReceiptUuid { get; set; }
+
+        [JsonProperty]
+        public string ApprovedReceiptUrl { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SelfWork.Data
 {
-    public sealed class TokenResult
+    internal sealed class TokenResult
     {
         [JsonProperty]
         public string Token { get; set; }

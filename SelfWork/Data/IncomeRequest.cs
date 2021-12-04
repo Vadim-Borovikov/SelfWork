@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace SelfWork.Data
 {
-    public sealed class IncomeRequest
+    internal sealed class IncomeRequest
     {
         public sealed class Service
         {
@@ -18,7 +18,7 @@ namespace SelfWork.Data
             public uint Quantity { get; set; }
         }
 
-        internal sealed class Client
+        public sealed class Client
         {
             [JsonProperty]
             public string ContactPhone { get; set; }
@@ -34,24 +34,24 @@ namespace SelfWork.Data
         }
 
         [JsonProperty]
-        internal DateTime OperationTime { get; set; }
+        public DateTime OperationTime { get; set; }
 
         [JsonProperty]
-        internal DateTime RequestTime { get; set; }
+        public DateTime RequestTime { get; set; }
 
         [JsonProperty]
-        internal List<Service> Services { get; set; }
+        public List<Service> Services { get; set; }
 
         [JsonProperty]
-        internal decimal TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
         [JsonProperty("client")]
-        internal Client ClientInfo { get; set; }
+        public Client ClientInfo { get; set; }
 
         [JsonProperty]
-        internal string PaymentType { get; set; }
+        public string PaymentType { get; set; }
 
         [JsonProperty]
-        internal bool IgnoreMaxTotalIncomeRestriction { get; set; }
+        public bool IgnoreMaxTotalIncomeRestriction { get; set; }
     }
 }
