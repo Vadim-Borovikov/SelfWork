@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using SelfWork.Data;
 
 namespace SelfWork
@@ -16,15 +17,15 @@ namespace SelfWork
             FromForeignAgency
         }
 
-        public static string GetToken(string userAgent, string sourceDeviceId, string sourceType, string appVersion,
-            string refreshToken)
+        public static async Task<string> GetTokenAsync(string userAgent, string sourceDeviceId, string sourceType,
+            string appVersion, string refreshToken)
         {
-            TokenResult result = Provider.GetToken(userAgent, sourceDeviceId, sourceType, appVersion, refreshToken);
+            TokenResult result = await Provider.GetTokenAsync(userAgent, sourceDeviceId, sourceType, appVersion, refreshToken);
             return result.Token;
         }
 
-        public static IncomeResult PostIncome(string name, decimal amount, string token, IncomeType? incomeType = null,
-            DateTime? operationTime = null)
+        public static Task<IncomeResult> PostIncomeAsync(string name, decimal amount, string token,
+            IncomeType? incomeType = null, DateTime? operationTime = null)
         {
             var service = new IncomeRequest.Service
             {
@@ -40,7 +41,7 @@ namespace SelfWork
                 operationTime = now;
             }
 
-            return Provider.PostIncome(operationTime.Value, now, services, amount, token, GetValue(incomeType));
+            return Provider.PostIncomeAsync(operationTime.Value, now, services, amount, token, GetValue(incomeType));
         }
 
         private static string GetValue(IncomeType? incomeType)

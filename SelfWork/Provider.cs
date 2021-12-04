@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SelfWork.Data;
@@ -8,7 +9,7 @@ namespace SelfWork
 {
     internal static class Provider
     {
-        public static TokenResult GetToken(string userAgent, string sourceDeviceId, string sourceType,
+        public static Task<TokenResult> GetTokenAsync(string userAgent, string sourceDeviceId, string sourceType,
             string appVersion, string refreshToken)
         {
             var metaDetails = new TokenRequest.Device.MetaDetails { UserAgent = userAgent };
@@ -25,10 +26,10 @@ namespace SelfWork
                 RefreshToken = refreshToken
             };
 
-            return RestHelper.CallPostMethod<TokenResult>(ApiProvider, GetTokenMethod, tokenRequestDto, Settings);
+            return RestHelper.CallPostMethodAsync<TokenResult>(ApiProvider, GetTokenMethod, tokenRequestDto, Settings);
         }
 
-        public static IncomeResult PostIncome(DateTime operationTime, DateTime requestTime,
+        public static Task<IncomeResult> PostIncomeAsync(DateTime operationTime, DateTime requestTime,
             List<IncomeRequest.Service> services, decimal totalAmount, string token, string incomeType)
         {
             var client = new IncomeRequest.Client { IncomeType = incomeType };
@@ -42,7 +43,7 @@ namespace SelfWork
                 PaymentType = PaymentType
             };
 
-            return RestHelper.CallPostMethod<IncomeResult>(ApiProvider, PostIncomeMethod, incomeRequestDto, Settings,
+            return RestHelper.CallPostMethodAsync<IncomeResult>(ApiProvider, PostIncomeMethod, incomeRequestDto, Settings,
                 token);
         }
 

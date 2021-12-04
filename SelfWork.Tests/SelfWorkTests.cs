@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SelfWork.Data;
@@ -9,20 +10,21 @@ namespace SelfWork.Tests
     public sealed class SelfWorkTests
     {
         [TestMethod]
-        public void TestGetToken() { GetToken(); }
+        public async Task TestGetToken() => await GetTokenAsync();
 
         [TestMethod]
-        public void TestPostIncome()
+        public async Task TestPostIncomeAsync()
         {
-            string token = GetToken();
-            IncomeResult result = DataManager.PostIncome("Тест", 1000, token);
+            string token = await GetTokenAsync();
+            IncomeResult result = await DataManager.PostIncomeAsync("Тест", 1000, token);
             Assert.IsNotNull(result);
         }
 
-        private static string GetToken()
+        private static async Task<string> GetTokenAsync()
         {
             Configuration config = GetConfig();
-            string token = DataManager.GetToken(UserAgent, config.SourceDeviceId, SourceType, AppVersion, config.RefreshToken);
+            string token =
+                await DataManager.GetTokenAsync(UserAgent, config.SourceDeviceId, SourceType, AppVersion, config.RefreshToken);
             Assert.IsFalse(string.IsNullOrEmpty(token));
             return token;
         }
