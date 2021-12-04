@@ -29,10 +29,10 @@ namespace SelfWork
             return RestHelper.CallPostMethodAsync<TokenResult>(ApiProvider, GetTokenMethod, tokenRequestDto, Settings);
         }
 
-        public static Task<IncomeResult> PostIncomeAsync(DateTime operationTime, DateTime requestTime,
-            List<IncomeRequest.Service> services, decimal totalAmount, string token, string incomeType)
+        public static Task<IncomeResult> PostIncomeFromIndividualAsync(DateTime operationTime, DateTime requestTime,
+            List<IncomeRequest.Service> services, decimal totalAmount, string token)
         {
-            var client = new IncomeRequest.Client { IncomeType = incomeType };
+            var client = new IncomeRequest.Client();
             var incomeRequestDto = new IncomeRequest
             {
                 OperationTime = operationTime,

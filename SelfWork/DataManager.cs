@@ -10,13 +10,6 @@ namespace SelfWork
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static class DataManager
     {
-        public enum IncomeType
-        {
-            FromIndividual,
-            FromLegalEntity,
-            FromForeignAgency
-        }
-
         public static async Task<string> GetTokenAsync(string userAgent, string sourceDeviceId, string sourceType,
             string appVersion, string refreshToken)
         {
@@ -25,7 +18,7 @@ namespace SelfWork
         }
 
         public static Task<IncomeResult> PostIncomeAsync(string name, decimal amount, string token,
-            IncomeType? incomeType = null, DateTime? operationTime = null)
+            DateTime? operationTime = null)
         {
             var service = new IncomeRequest.Service
             {
@@ -41,23 +34,7 @@ namespace SelfWork
                 operationTime = now;
             }
 
-            return Provider.PostIncomeAsync(operationTime.Value, now, services, amount, token, GetValue(incomeType));
+            return Provider.PostIncomeFromIndividualAsync(operationTime.Value, now, services, amount, token);
         }
-
-        private static string GetValue(IncomeType? incomeType)
-        {
-            switch (incomeType)
-            {
-                case IncomeType.FromIndividual: return FromIndividualValue;
-                case IncomeType.FromLegalEntity: return FromLegalEntityValue;
-                case IncomeType.FromForeignAgency: return FromForeignAgencyValue;
-                case null: return null;
-                default: throw new ArgumentOutOfRangeException(nameof(incomeType), incomeType, null);
-            }
-        }
-
-        private const string FromIndividualValue = "FROM_INDIVIDUAL";
-        private const string FromLegalEntityValue = "FROM_LEGAL_ENTITY";
-        private const string FromForeignAgencyValue = "FROM_FOREIGN_AGENCY";
     }
 }

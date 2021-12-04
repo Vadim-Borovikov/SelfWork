@@ -12,7 +12,7 @@ namespace SelfWork.Tests
         [TestMethod]
         public async Task TestGetToken() => await GetTokenAsync();
 
-        [TestMethod]
+        [TestMethod("Post — and then CANCEL income MANUALY!")]
         public async Task TestPostIncomeAsync()
         {
             string token = await GetTokenAsync();
