@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SelfWork.Data;
 
 namespace SelfWork
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class Provider
     {
         public static TokenResult GetToken(string userAgent, string sourceDeviceId, string sourceType,

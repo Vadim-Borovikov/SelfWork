@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using RestSharp;
 
 namespace SelfWork
 {
-    internal static class RestHelper
+    [SuppressMessage("ReSharper", "MemberCanBeInternal")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    public static class RestHelper
     {
         public static TResult CallGetMethod<TResult>(string apiProvider, string method,
             Dictionary<string, object> parameters)
