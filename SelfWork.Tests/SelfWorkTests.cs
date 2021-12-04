@@ -16,7 +16,7 @@ namespace SelfWork.Tests
         public async Task TestPostIncomeAsync()
         {
             string token = await GetTokenAsync();
-            IncomeResult result = await DataManager.PostIncomeAsync("Тест", 1000, token);
+            IncomeResult result = await DataManager.PostIncomeFromIndividualAsync("Тест", 1000, token);
             Assert.IsNotNull(result);
         }
 

@@ -17,7 +17,7 @@ namespace SelfWork
             return result.Token;
         }
 
-        public static Task<IncomeResult> PostIncomeAsync(string name, decimal amount, string token,
+        public static Task<IncomeResult> PostIncomeFromIndividualAsync(string name, decimal amount, string token,
             DateTime? operationTime = null)
         {
             var service = new IncomeRequest.Service
