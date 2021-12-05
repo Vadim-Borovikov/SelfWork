@@ -17,7 +17,7 @@ namespace SelfWork
             return result.Token;
         }
 
-        public static Task<IncomeResult> PostIncomeFromIndividualAsync(string name, decimal amount, string token,
+        public static async Task<string> PostIncomeFromIndividualAsync(string name, decimal amount, string token,
             DateTime? operationTime = null)
         {
             var service = new IncomeRequest.Service
@@ -34,7 +34,17 @@ namespace SelfWork
                 operationTime = now;
             }
 
-            return Provider.PostIncomeFromIndividualAsync(operationTime.Value, now, services, amount, token);
+            IncomeResult result =
+                await Provider.PostIncomeFromIndividualAsync(operationTime.Value, now, services, amount, token);
+            return result.ApprovedReceiptUuid;
         }
+
+        public static Uri GetReceiptUri(long payerId, string receiptId)
+        {
+            string url = string.Format(TaxReceiptUrlFormat, Provider.ApiProvider, payerId, receiptId);
+            return new Uri(url);
+        }
+
+        private const string TaxReceiptUrlFormat = "{0}receipt/{1}/{2}/print";
     }
 }

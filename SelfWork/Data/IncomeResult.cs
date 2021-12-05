@@ -2,12 +2,9 @@
 
 namespace SelfWork.Data
 {
-    public sealed class IncomeResult
+    internal sealed class IncomeResult
     {
         [JsonProperty]
         public string ApprovedReceiptUuid { get; set; }
-
-        [JsonProperty]
-        public string ApprovedReceiptUrl { get; set; }
     }
 }

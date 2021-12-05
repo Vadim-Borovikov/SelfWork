@@ -47,7 +47,8 @@ namespace SelfWork
                 token);
         }
 
-        private const string ApiProvider = "https://lknpd.nalog.ru/api/v1/";
+        internal const string ApiProvider = "https://lknpd.nalog.ru/api/v1/";
+
         private const string GetTokenMethod = "auth/token";
         private const string PostIncomeMethod = "income";
         private const string PaymentType = "CASH";

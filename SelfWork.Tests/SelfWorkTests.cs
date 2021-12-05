@@ -1,8 +1,8 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SelfWork.Data;
 
 namespace SelfWork.Tests
 {
@@ -16,8 +16,10 @@ namespace SelfWork.Tests
         public async Task TestPostIncomeAsync()
         {
             string token = await GetTokenAsync();
-            IncomeResult result = await DataManager.PostIncomeFromIndividualAsync("Тест", 1000, token);
-            Assert.IsNotNull(result);
+            string receiptId = await DataManager.PostIncomeFromIndividualAsync("Тест", 1000, token);
+            Assert.IsFalse(string.IsNullOrEmpty(receiptId));
+            Uri uri = DataManager.GetReceiptUri(1, receiptId);
+            Assert.IsNotNull(uri);
         }
 
         private static async Task<string> GetTokenAsync()
