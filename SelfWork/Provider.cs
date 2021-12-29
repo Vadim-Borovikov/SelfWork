@@ -47,10 +47,26 @@ namespace SelfWork
                 token);
         }
 
+        public static Task<CancelResult> CancelIncomeAsync(string receiptUuid, string comment, DateTime operationTime,
+            DateTime requestTime, string token)
+        {
+            var cancelRequestDto = new CancelRequest
+            {
+                ReceiptUuid = receiptUuid,
+                Comment = comment,
+                OperationTime = operationTime,
+                RequestTime = requestTime
+            };
+
+            return RestHelper.CallPostMethodAsync<CancelResult>(ApiProvider, CancelMethod, cancelRequestDto, Settings,
+                token);
+        }
+
         internal const string ApiProvider = "https://lknpd.nalog.ru/api/v1/";
 
         private const string GetTokenMethod = "auth/token";
         private const string PostIncomeMethod = "income";
+        private const string CancelMethod = "cancel";
         private const string PaymentType = "CASH";
 
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings

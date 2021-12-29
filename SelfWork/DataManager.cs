@@ -39,6 +39,13 @@ namespace SelfWork
             return result.ApprovedReceiptUuid;
         }
 
+        public static async Task<bool> CancelIncome(string uuid, string token)
+        {
+            DateTime now = DateTime.Now;
+            CancelResult result = await Provider.CancelIncomeAsync(uuid, CancellationComment, now, now, token);
+            return result?.IncomeInfo?.ApprovedReceiptUuid == uuid;
+        }
+
         public static Uri GetReceiptUri(long payerId, string receiptId)
         {
             string url = string.Format(TaxReceiptUrlFormat, Provider.ApiProvider, payerId, receiptId);
@@ -46,5 +53,6 @@ namespace SelfWork
         }
 
         private const string TaxReceiptUrlFormat = "{0}receipt/{1}/{2}/print";
+        private const string CancellationComment = "Чек сформирован ошибочно";
     }
 }

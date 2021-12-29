@@ -12,14 +12,18 @@ namespace SelfWork.Tests
         [TestMethod]
         public async Task TestGetToken() => await GetTokenAsync();
 
-        [TestMethod("Post — and then CANCEL income MANUALY!")]
-        public async Task TestPostIncomeAsync()
+        [TestMethod]
+        public async Task TestPostAndCancelIncomeAsync()
         {
             string token = await GetTokenAsync();
+
             string receiptId = await DataManager.PostIncomeFromIndividualAsync("Тест", 1000, token);
             Assert.IsFalse(string.IsNullOrEmpty(receiptId));
             Uri uri = DataManager.GetReceiptUri(1, receiptId);
             Assert.IsNotNull(uri);
+
+            bool success = await DataManager.CancelIncome(receiptId, token);
+            Assert.IsTrue(success);
         }
 
         private static async Task<string> GetTokenAsync()
