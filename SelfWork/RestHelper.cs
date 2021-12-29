@@ -10,10 +10,10 @@ namespace SelfWork
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class RestHelper
     {
-        public static TResult CallGetMethod<TResult>(string apiProvider, string method,
+        public static async Task<TResult> CallGetMethodAsync<TResult>(string apiProvider, string method,
             Dictionary<string, object> parameters)
         {
-            IRestResponse response = CallGetMethod(apiProvider, method, parameters);
+            IRestResponse response = await CallGetMethodAsync(apiProvider, method, parameters);
 
             return JsonConvert.DeserializeObject<TResult>(response.Content);
         }
@@ -28,7 +28,7 @@ namespace SelfWork
             return JsonConvert.DeserializeObject<TResult>(response.Content, settings);
         }
 
-        private static IRestResponse CallGetMethod(string apiProvider, string method,
+        private static Task<IRestResponse> CallGetMethodAsync(string apiProvider, string method,
             Dictionary<string, object> parameters)
         {
             var client = new RestClient($"{apiProvider}");
@@ -38,7 +38,7 @@ namespace SelfWork
                 request.AddParameter(key, parameters[key]);
             }
 
-            return client.Execute(request);
+            return client.ExecuteAsync(request);
         }
 
         private static Task<IRestResponse> CallPostMethodAsync(string apiProvider, string method, string json, string token)
