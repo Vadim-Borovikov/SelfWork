@@ -1,13 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <Version>4.0.0</Version>
+    <TargetFramework>net6.0</TargetFramework>
+    <Version>5.0.0</Version>
     <Description>Package for self-work Rissian Tax System</Description>
     <RepositoryUrl>https://github.com/Vadim-Borovikov/SelfWork</RepositoryUrl>
-    <Authors>Vadim-Borovikov</Authors>
-    <Company>Vadim-Borovikov</Company>
+    <Authors>Vadim Borovikov</Authors>
+    <Company>Care Space</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <UserSecretsId>ccaf9408-44a0-43bb-8d10-72edc0a3d536</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,8 +19,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RestSharp" Version="106.13.0" />
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GryphonUtilities" Version="1.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="GenerateNuspec">
+    <Exec Command="if exist postBuild.bat if $(ConfigurationName) == Release call postBuild.bat $(OutDir)..\$(AssemblyName).$(PackageVersion).nupkg" />
+  </Target>
 
 </Project>

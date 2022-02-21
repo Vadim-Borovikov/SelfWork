@@ -1,78 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using GryphonUtilities;
 using SelfWork.Data;
 
-namespace SelfWork
+namespace SelfWork;
+
+internal static class Provider
 {
-    internal static class Provider
+    public static Task<TokenResponse> GetTokenAsync(string userAgent, string sourceDeviceId, string sourceType,
+        string appVersion, string refreshToken)
     {
-        public static Task<TokenResult> GetTokenAsync(string userAgent, string sourceDeviceId, string sourceType,
-            string appVersion, string refreshToken)
+        TokenRequest.Device.MetaDetailsInfo metaDetails = new() { UserAgent = userAgent };
+        TokenRequest.Device deviceInfo = new()
         {
-            var metaDetails = new TokenRequest.Device.MetaDetails { UserAgent = userAgent };
-            var deviceInfo = new TokenRequest.Device
-            {
-                SourceDeviceId = sourceDeviceId,
-                SourceType = sourceType,
-                AppVersion = appVersion,
-                MetaDetailsInfo = metaDetails
-            };
-            var tokenRequestDto = new TokenRequest
-            {
-                DeviceInfo = deviceInfo,
-                RefreshToken = refreshToken
-            };
-
-            return RestHelper.CallPostMethodAsync<TokenResult>(ApiProvider, GetTokenMethod, tokenRequestDto, Settings);
-        }
-
-        public static Task<IncomeResult> PostIncomeFromIndividualAsync(DateTime operationTime, DateTime requestTime,
-            List<IncomeRequest.Service> services, decimal totalAmount, string token)
-        {
-            var client = new IncomeRequest.Client();
-            var incomeRequestDto = new IncomeRequest
-            {
-                OperationTime = operationTime,
-                RequestTime = requestTime,
-                Services = services,
-                TotalAmount = totalAmount,
-                ClientInfo = client,
-                PaymentType = PaymentType
-            };
-
-            return RestHelper.CallPostMethodAsync<IncomeResult>(ApiProvider, PostIncomeMethod, incomeRequestDto, Settings,
-                token);
-        }
-
-        public static Task<CancelResult> CancelIncomeAsync(string receiptUuid, string comment, DateTime operationTime,
-            DateTime requestTime, string token)
-        {
-            var cancelRequestDto = new CancelRequest
-            {
-                ReceiptUuid = receiptUuid,
-                Comment = comment,
-                OperationTime = operationTime,
-                RequestTime = requestTime
-            };
-
-            return RestHelper.CallPostMethodAsync<CancelResult>(ApiProvider, CancelMethod, cancelRequestDto, Settings,
-                token);
-        }
-
-        internal const string ApiProvider = "https://lknpd.nalog.ru/api/v1/";
-
-        private const string GetTokenMethod = "auth/token";
-        private const string PostIncomeMethod = "income";
-        private const string CancelMethod = "cancel";
-        private const string PaymentType = "CASH";
-
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            DateFormatString = "yyyy-MM-ddTHH\\:mm\\:ss.fffzzz"
+            SourceDeviceId = sourceDeviceId,
+            SourceType = sourceType,
+            AppVersion = appVersion,
+            MetaDetails = metaDetails
         };
+        TokenRequest tokenRequestObj = new()
+        {
+            DeviceInfo = deviceInfo,
+            RefreshToken = refreshToken
+        };
+
+        return RestHelper.CallPostMethodAsync<TokenRequest, TokenResponse>(ApiProvider, GetTokenMethod,
+            obj: tokenRequestObj);
     }
+
+    public static Task<IncomeResponse> PostIncomeFromIndividualAsync(DateTime operationTime, DateTime requestTime,
+        IEnumerable<IncomeRequest.Service> services, decimal totalAmount, string token)
+    {
+        IncomeRequest.ClientInfo client = new();
+        IncomeRequest incomeRequestObj = new()
+        {
+            OperationTime = operationTime,
+            RequestTime = requestTime,
+            Services = services.Select(s => (IncomeRequest.Service?) s).ToList(),
+            TotalAmount = totalAmount,
+            Client = client,
+            PaymentType = PaymentType
+        };
+
+        return CallPostMethodAsync<IncomeRequest, IncomeResponse>(PostIncomeMethod, token, incomeRequestObj);
+    }
+
+    public static Task<CancelResponse> CancelIncomeAsync(string receiptUuid, string comment, DateTime operationTime,
+        DateTime requestTime, string token)
+    {
+        CancelRequest cancelRequestObj = new()
+        {
+            ReceiptUuid = receiptUuid,
+            Comment = comment,
+            OperationTime = operationTime,
+            RequestTime = requestTime
+        };
+
+        return CallPostMethodAsync<CancelRequest, CancelResponse>(CancelMethod, token, cancelRequestObj);
+    }
+
+    private static Task<TResponse> CallPostMethodAsync<TRequest, TResponse>(string method, string token, TRequest obj)
+        where TRequest : class
+    {
+        string headerValue = $"Bearer {token}";
+        return RestHelper.CallPostMethodAsync<TRequest, TResponse>(ApiProvider, method, HeaderName, headerValue, obj);
+    }
+
+    internal const string ApiProvider = "https://lknpd.nalog.ru/api/v1/";
+
+    private const string GetTokenMethod = "auth/token";
+    private const string PostIncomeMethod = "income";
+    private const string CancelMethod = "cancel";
+    private const string PaymentType = "CASH";
+    private const string HeaderName = "Authorization";
+
+    /*private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+    {
+        ContractResolver = new CamelCasePropertyNamesContractResolver(),
+        DateFormatString = "yyyy-MM-ddTHH\\:mm\\:ss.fffzzz"
+    };*/
 }

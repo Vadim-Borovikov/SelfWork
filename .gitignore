@@ -348,6 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/SelfWork/nuget.config
-/SelfWork/nuget push.cmd
+/NuGet.Config
+/SelfWork/postBuild.bat
 /SelfWork.Tests/appsettings.json

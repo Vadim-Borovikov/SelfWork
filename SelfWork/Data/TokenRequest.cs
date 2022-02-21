@@ -1,34 +1,33 @@
 ﻿using Newtonsoft.Json;
 
-namespace SelfWork.Data
+namespace SelfWork.Data;
+
+internal sealed class TokenRequest
 {
-    internal sealed class TokenRequest
+    public sealed class Device
     {
-        public sealed class Device
+        public sealed class MetaDetailsInfo
         {
-            public sealed class MetaDetails
-            {
-                [JsonProperty]
-                public string UserAgent { get; set; }
-            }
-
             [JsonProperty]
-            public string SourceDeviceId { get; set; }
-
-            [JsonProperty]
-            public string SourceType { get; set; }
-
-            [JsonProperty]
-            public string AppVersion { get; set; }
-
-            [JsonProperty("metaDetails")]
-            public MetaDetails MetaDetailsInfo { get; set; }
+            public string? UserAgent { get; set; }
         }
 
         [JsonProperty]
-        public Device DeviceInfo { get; set; }
+        public string? SourceDeviceId { get; set; }
 
         [JsonProperty]
-        public string RefreshToken { get; set; }
+        public string? SourceType { get; set; }
+
+        [JsonProperty]
+        public string? AppVersion { get; set; }
+
+        [JsonProperty]
+        public MetaDetailsInfo? MetaDetails { get; set; }
     }
+
+    [JsonProperty]
+    public Device? DeviceInfo { get; set; }
+
+    [JsonProperty]
+    public string? RefreshToken { get; set; }
 }
