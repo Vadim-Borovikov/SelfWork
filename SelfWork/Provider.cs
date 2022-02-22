@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GryphonUtilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SelfWork.Data;
 
 namespace SelfWork;
@@ -65,7 +67,8 @@ internal static class Provider
         where TRequest : class
     {
         string headerValue = $"Bearer {token}";
-        return RestHelper.CallPostMethodAsync<TRequest, TResponse>(ApiProvider, method, HeaderName, headerValue, obj);
+        return RestHelper.CallPostMethodAsync<TRequest, TResponse>(ApiProvider, method, HeaderName, headerValue, obj,
+            Settings);
     }
 
     internal const string ApiProvider = "https://lknpd.nalog.ru/api/v1/";
@@ -76,9 +79,9 @@ internal static class Provider
     private const string PaymentType = "CASH";
     private const string HeaderName = "Authorization";
 
-    /*private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+    private static readonly JsonSerializerSettings Settings = new()
     {
         ContractResolver = new CamelCasePropertyNamesContractResolver(),
         DateFormatString = "yyyy-MM-ddTHH\\:mm\\:ss.fffzzz"
-    };*/
+    };
 }
